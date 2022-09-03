@@ -588,9 +588,11 @@ if __name__ == "__main__":
         # merge trainer cli with config
         trainer_config = lightning_config.get("trainer", OmegaConf.create())
         # default to ddp
-        trainer_config["accelerator"] = "ddp"
+        trainer_config["accelerator"] = "tpu"
+        trainer_config["device"] = "1"
         for k in nondefault_trainer_args(opt):
             trainer_config[k] = getattr(opt, k)
+        """
         if not "gpus" in trainer_config:
             del trainer_config["accelerator"]
             cpu = True
@@ -598,6 +600,8 @@ if __name__ == "__main__":
             gpuinfo = trainer_config["gpus"]
             print(f"Running on GPUs {gpuinfo}")
             cpu = False
+        """
+        cpu = False
         trainer_opt = argparse.Namespace(**trainer_config)
         lightning_config.trainer = trainer_config
 
